@@ -1,0 +1,35 @@
+{
+  "name": "smokespygaming",
+  "version": "1.0.0",
+  "description": "node.js web application for heroku",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+    
+  },
+  "author": "Robert Matteau",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RobertMatteau/smokespygaming.git"
+  },
+  "dependencies": {
+  	"bcryptjs": "*",
+  	"body-parser": "*",
+  	"connect-flash": "*",
+  	"cookie-parser": "^1.4.1",
+  	"express": "*",
+  	"express-handlebars": "*",
+  	"express-messages": "*",
+  	"express-session": "*",
+  	"express-validator": "*",
+  	"mongodb": "*",
+  	"mongoose": "*",
+  	"passport": "*",
+  	"passport-http": "*",
+  	"passport-local": "*"
+},
+"engines":{
+  "node": "5.9.1"
+}
+}
