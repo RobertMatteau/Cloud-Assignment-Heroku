@@ -1,17 +1,31 @@
-var express = require('express');
-var router = express.Router();
+/* By Robert Matteau
+  Febuary 8th, 2017 
+ Heruko Cloud Assignment
+ */
 
-// Get Homepage
-router.get('/', ensureAuthenticated, function(req, res){
+var expresslib = require('express');
+var route = expresslib.Router();
+
+//checking with authentication
+route.get('/', Authentication, function(req, res)
+{
 	res.render('index');
 });
 
-function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated()){
+//checks to see if the user is authenticated
+function Authentication(req, res, next)
+{
+	if(req.isAuthenticated())
+	{
 		return next();
-	} else {
+	} 
+
+
+	else 
+	{
+		//if not it goes back
 		res.redirect('/users/login');
 	}
 }
 
-module.exports = router;
+module.exports = route;

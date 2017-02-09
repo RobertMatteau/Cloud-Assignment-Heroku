@@ -1,8 +1,13 @@
-var mongoose = require('mongoose');
-var bcrypt = require('bcryptjs');
+/* By Robert Matteau
+  Febuary 8th, 2017 
+ Heruko Cloud Assignment
+ */
 
-// User Schema
-var UserSchema = mongoose.Schema({
+var mongooselib = require('mongoose');
+var bcryptlib = require('bcryptjs');
+
+// Account Schema
+var AccountSchema = mongooselib.Schema({
 	username: {
 		type: String,
 		index:true
@@ -18,29 +23,56 @@ var UserSchema = mongoose.Schema({
 	}
 });
 
-var User = module.exports = mongoose.model('User', UserSchema);
+var Account = module.exports = mongooselib.model('Account', AccountSchema);
 
-module.exports.createUser = function(newUser, callback){
-	bcrypt.genSalt(10, function(err, salt) {
-	    bcrypt.hash(newUser.password, salt, function(err, hash) {
+// creating a user
+module.exports.createUser = function(newUser, callback)
+{
+
+	//encrytping the information
+	bcryptlib.genSalt(10, function(err, salt) 
+	{
+
+		//hashing the username
+	    bcryptlib.hash(newUser.password, salt, function(err, hash) 
+	    {
+
 	        newUser.password = hash;
 	        newUser.save(callback);
+
 	    });
 	});
 }
 
-module.exports.getUserByUsername = function(username, callback){
+//get the user by finding the name
+module.exports.getUserByUsername = function(username, callback)
+{
+
+//looking for the account name
 	var query = {username: username};
-	User.findOne(query, callback);
+	Account.findOne(query, callback);
+
 }
 
-module.exports.getUserById = function(id, callback){
-	User.findById(id, callback);
+//get the users by the id
+module.exports.getUserById = function(id, callback)
+{
+
+	Account.findById(id, callback);
 }
 
-module.exports.comparePassword = function(candidatePassword, hash, callback){
-	bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
+//checking for passwords to compare
+module.exports.comparePassword = function(candidatePassword, hash, callback)
+{
+
+	//encrytp the passwords
+	bcryptlib.compare(candidatePassword, hash, function(err, isMatch) 
+	{
+
+
     	if(err) throw err;
     	callback(null, isMatch);
+
+
 	});
 }

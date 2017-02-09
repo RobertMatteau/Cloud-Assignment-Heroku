@@ -1,34 +1,31 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
+/* By Robert Matteau
+  Febuary 8th, 2017 
+ Heruko Cloud Assignment
+ */
+
+var expresslib = require('express');
+var route = expresslib.Router();
+var passportlib = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../models/user');
 
-// Register
-router.get('/register', function(req, res){
-	res.render('register');
-});
 
-// Login
-router.get('/login', function(req, res){
-	res.render('login');
-});
 
-// Location
-router.get('/location', function(req, res){
-	res.render('location');
-});
+// used for registering the user
+route.post('/register', function(req, res)
 
-// Register User
-router.post('/register', function(req, res){
+{
+	//set up variables
 	var name = req.body.name;
 	var email = req.body.email;
 	var username = req.body.username;
 	var password = req.body.password;
 	var password2 = req.body.password2;
 
-	// Validation
+
+
+	// checking to see if everythign is valid and if the passwords match
 	req.checkBody('name', 'Name is required').notEmpty();
 	req.checkBody('email', 'Email is required').notEmpty();
 	req.checkBody('email', 'Email is not valid').isEmail();
@@ -36,23 +33,42 @@ router.post('/register', function(req, res){
 	req.checkBody('password', 'Password is required').notEmpty();
 	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
-	var errors = req.validationErrors();
 
-	if(errors){
-		res.render('register',{
+
+	var errors = req.validationErrors();
+//checks for erros
+	if(errors)
+	{
+		
+		res.render('register',
+		{
+
 			errors:errors
+
 		});
-	} else {
-		var newUser = new User({
+
+	} 
+	//else adds acccount to database
+	else {
+
+
+		var newAccount = new Account(
+		{
+
 			name: name,
 			email:email,
 			username: username,
 			password: password
-		});
 
-		User.createUser(newUser, function(err, user){
+
+		});
+		//creates new user
+		Account.createUser(newAccount, function(err, user)
+		{
+
 			if(err) throw err;
 			console.log(user);
+
 		});
 
 		req.flash('success_msg', 'You are registered and can now login');
@@ -61,47 +77,110 @@ router.post('/register', function(req, res){
 	}
 });
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-   User.getUserByUsername(username, function(err, user){
+// register page
+route.get('/register', function(req, res)
+{
+
+	res.render('register');
+
+});
+
+// login page
+route.get('/login', function(req, res)
+{
+
+	res.render('login');
+
+});
+
+// location page
+route.get('/location', function(req, res)
+{
+
+	res.render('location');
+
+});
+
+//uses passport library to check info
+passportlib.use(new LocalStrategy(function(username, password, done) 
+{
+
+	//get the user by their name
+   Account.getUserByUsername(username, function(err, user)
+   {
+
+
    	if(err) throw err;
-   	if(!user){
-   		return done(null, false, {message: 'Unknown User'});
+   	if(!user)
+   	{
+
+   		return done(null, false, {message: 'Unknown Account'});
+
    	}
 
-   	User.comparePassword(password, user.password, function(err, isMatch){
+
+   	//compares the password
+   	Account.comparePassword(password, user.password, function(err, isMatch)
+   	{
+
    		if(err) throw err;
-   		if(isMatch){
+   		//checks if match or not
+   		if(isMatch)
+   		{
+
    			return done(null, user);
-   		} else {
+
+   		} 
+
+   		else {
+
    			return done(null, false, {message: 'Invalid password'});
    		}
+
    	});
    });
   }));
 
-passport.serializeUser(function(user, done) {
+
+passportlib.serializeUser(function(user, done) 
+{
+
   done(null, user.id);
+
 });
 
-passport.deserializeUser(function(id, done) {
-  User.getUserById(id, function(err, user) {
+passportlib.deserializeUser(function(id, done)
+ {
+
+
+  Account.getUserById(id, function(err, user)
+   {
+
     done(err, user);
+
   });
+
 });
 
-router.post('/login',
-  passport.authenticate('local', {successRedirect:'/', failureRedirect:'/users/login',failureFlash: true}),
-  function(req, res) {
+//if login failes
+route.post('/login', passportlib.authenticate('local', {successRedirect:'/', failureRedirect:'/users/login',failureFlash: true}),function(req, res)
+ {
+
     res.redirect('/');
+
   });
 
-router.get('/logout', function(req, res){
+
+//loging out function
+route.get('/logout', function(req, res)
+{
+
 	req.logout();
 
 	req.flash('success_msg', 'You are logged out');
 
+//redirect page
 	res.redirect('/users/login');
 });
 
-module.exports = router;
+module.exports = route;

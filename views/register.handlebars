@@ -1,29 +1,65 @@
+ <!-- By Robert Matteau -->
+ <!-- Febuary 8th, 2017 -->
+ <!-- Heruko Cloud Assignment-->
+
+<!-- register title -->
 <h2 class="page-header">Register</h2>
+
+<!-- checking for errors -->
 {{#if errors}}
+
+
       {{#each errors}}
-        <div class="alert alert-danger">{{msg}}</div>
+
+        <div class="alert alert-danger">{{msg}}
+        </div>
+
       {{/each}}
+
+<!-- checking for users wanting to register -->
 {{/if}}
 <form method="post" action="/users/register">
+
    <div class="form-group">
+
     <label>Name</label>
     <input type="text" class="form-control" placeholder="Name" name="name">
+
   </div>
+
+<!-- sets up each entry field as groups -->
   <div class="form-group">
+
+  <!-- username entry field -->
     <label>Username</label>
     <input type="text" class="form-control" placeholder="Username" name="username">
+
   </div>
+
+  <!-- email entry field -->
    <div class="form-group">
+
     <label>Email</label>
     <input type="email" class="form-control" placeholder="Email" name="email">
+
   </div>
+
+  <!-- password entry field -->
   <div class="form-group">
+
     <label>Password</label>
     <input type="password" class="form-control" placeholder="Password" name="password">
+
   </div>
+
+  <!-- confirm password field -->
   <div class="form-group">
+
     <label>Confirm Password</label>
     <input type="password" class="form-control" placeholder="Password" name="password2">
+
   </div>
+
+  <!-- register button -->
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
